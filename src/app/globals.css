@@ -33,7 +33,7 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 20px;
+  padding: 15px;
   min-height: 400px;
   overflow-y: auto;
   backdrop-filter: blur(10px);
@@ -71,7 +71,18 @@ body {
 .chat-message.bot .bubble {
   border-bottom-left-radius: 0;
 }
-
+.chat-message img{
+  margin: 0px;
+}
+.chat-message.bot img{
+  margin-right: 5px;
+}
+.chat-message.user img{
+  margin-left: 5px;
+}
+.bubble p{
+  margin: 0;
+}
 /* Input Area */
 .input-area {
   display: flex;

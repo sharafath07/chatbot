@@ -1,5 +1,5 @@
 'use client';
-
+import { stripMarkdown } from './utils/stripMarkdown';
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
@@ -57,10 +57,13 @@ export default function Home() {
             key={idx}
             className={`chat-message ${msg.role === 'user' ? 'user' : 'bot'}`}
           >
+            {msg.role !== 'user'? <img src="https://png.pngtree.com/png-vector/20250903/ourmid/pngtree-d-ai-chatbot-icon-cute-robot-head-with-glossy-blue-design-png-image_17355891.webp" alt="" width="60px" height="60px" /> : ''}
             <div className="bubble">
               <strong>{msg.role === 'user' ? 'You' : 'Gemini'}:</strong>
               <p>{msg.text}</p>
+              {/* <p>{msg.role === "bot" ? stripMarkdown(msg.text) : msg.text}</p> */}
             </div>
+            {msg.role === 'user'? <img src="https://cdn-icons-png.flaticon.com/512/18388/18388709.png" alt="" width="60px" height="60px" /> : ''}
           </div>
         ))}
         {loading && (
