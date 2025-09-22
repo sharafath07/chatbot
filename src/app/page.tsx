@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 type Message = {
@@ -12,6 +12,11 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   async function sendMessage() {
     if (!input.trim()) return;
@@ -24,16 +29,13 @@ export default function Home() {
     try {
       const res = await axios.post('/api/gemini', { message: input });
 
-      // Cast response role explicitly to 'bot'
       const botMessage: Message = { role: 'bot', text: res.data.response as string };
-
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      const errorMessage: Message = {
-        role: 'bot',
-        text: 'Error: Could not get response from Gemini.',
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'bot', text: 'Error: Could not get response from Gemini.' },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -47,41 +49,47 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 600, margin: '40px auto', fontFamily: 'Arial, sans-serif' }}>
-      <h1>🤖 Gemini Code Chatbot</h1>
-      <div
-        style={{
-          border: '1px solid #ccc',
-          padding: 15,
-          minHeight: 300,
-          overflowY: 'auto',
-          whiteSpace: 'pre-wrap',
-        }}
-      >
+    <main className="chat-container">
+      <h1 className="chat-title">🤖 B.Voc Chatbot</h1>
+      <div className="chat-box">
         {messages.map((msg, idx) => (
-          <div key={idx} style={{ marginBottom: 15 }}>
-            <strong>{msg.role === 'user' ? 'You' : 'Gemini'}:</strong> <br />
-            {msg.text}
+          <div
+            key={idx}
+            className={`chat-message ${msg.role === 'user' ? 'user' : 'bot'}`}
+          >
+            <div className="bubble">
+              <strong>{msg.role === 'user' ? 'You' : 'Gemini'}:</strong>
+              <p>{msg.text}</p>
+            </div>
           </div>
         ))}
-        {loading && <p>Typing...</p>}
+        {loading && (
+          <div className="chat-message bot">
+            <div className="bubble typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
       </div>
-      <textarea
-        rows={3}
-        style={{ width: '100%', marginTop: 10, padding: 8, fontSize: 16 }}
-        placeholder="Ask me to generate some code..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        disabled={loading}
-      />
-      <button
-        onClick={sendMessage}
-        disabled={loading}
-        style={{ marginTop: 10, padding: '10px 15px', fontSize: 16, cursor: 'pointer' }}
-      >
-        Send
-      </button>
+      <div className="input-area">
+        <textarea
+          rows={2}
+          className="chat-input"
+          placeholder="Ask me to generate some code..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={loading}
+        />
+        <button
+          className="send-button"
+          onClick={sendMessage}
+          disabled={loading}
+        >
+          Send
+        </button>
+      </div>
     </main>
   );
 }
