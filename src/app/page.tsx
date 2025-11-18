@@ -59,7 +59,7 @@ export default function Home() {
         <title>B.Voc ChatBot</title>
       </head>
       <main className="chat-container">
-        <h1 className="chat-title">🤖 B.Voc Chatbot</h1>
+        <h1 className="chat-title">🤖 DeVoc Chatbot</h1>
         <div className="chat-box">
           {messages.map((msg, idx) => (
             <div
@@ -68,7 +68,7 @@ export default function Home() {
             >
               {msg.role !== 'user'? <img src="https://png.pngtree.com/png-vector/20250903/ourmid/pngtree-d-ai-chatbot-icon-cute-robot-head-with-glossy-blue-design-png-image_17355891.webp" alt="" width={60} height={60} /> : ''}
               <div className="bubble">
-                <strong>{msg.role === 'user' ? 'You' : 'B.Voc'}:</strong>
+                <strong>{msg.role === 'user' ? 'You' : 'DeVoc'}:</strong>
                 {/* Render Markdown if bot, plain text if user */}
                 {msg.role === "bot" ? 
                   <div className="mark">
